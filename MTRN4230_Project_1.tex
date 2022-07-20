@@ -1,0 +1,219 @@
+\documentclass[fleqn]{article}
+\usepackage[a4paper, total={6in, 10in}]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\graphicspath{ {./images/} }
+
+\title{MTRN4230 Project 1}
+\author{Lachlan Scott | z5207471}
+\date{July 10, 2022}
+
+\begin{document}
+\maketitle
+
+\section{Provided Data}
+\subsection{Defined positions:}
+A and B are two sets of joint angle positions ($\theta_1$ to $\theta_6$) of a UR5e robot:
+\begin{itemize} 
+    \item Joint Variables/Position A: [ -90, -173, 132, 220, 0, 0] (degrees)
+    \item Joint Variables/Position B: [-90, -60, 90, 0, 90, 0] (degrees)
+\end{itemize}
+\subsection{Denavit-Hartenburg Parameter Table of UR5e Robot:}
+
+\begin{table}[!ht]
+    \caption{DH Parameters of UR5e Robot}
+    \begin{center}
+    \begin{tabular}{||c | c | c | c | c||} 
+     \hline
+     Link & $\theta$ (rad) & a (m) & d (m) & $\alpha$ (rad)\\
+     \hline\hline
+     1 & 0 & 0 & 0.1625 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     2 & 0 & -0.425 & 0 & 0 \\ [1ex] 
+     \hline
+     3 & 0 & -0.3922 & 0 & 0 \\ [1ex] 
+     \hline
+     4 & 0 & 0 & 0.1333 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     5 & 0 & 0 & 0.0997 & $-\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     6 & 0 & 0 & 0.0996 & 0 \\ [1ex] 
+     \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+\section{Part A: Kinematic Modelling}
+\subsection{Construction of a Model of the UR5e Robot}
+
+\subsection{Calculation of Frame Transformation Matrices}
+\subsubsection{Useful Definitions}
+Translation matrix describing a translation from frame A to frame B:
+\begin{equation}
+\begin{split}
+^{A}p_{B}=\begin{bmatrix}
+^{A}x_{B}\\
+^{A}y_{B}\\
+^{A}z_{B}
+\end{bmatrix}
+\end{split}
+\end{equation}
+Rotation matrix describing a rotation from frame A to frame B:
+\begin{equation}
+\begin{split}
+^{A}R_{B}=\begin{bmatrix}
+x_b\cdot x_a & y_b\cdot x_a & z_b\cdot x_a\\
+x_b\cdot y_a & y_b\cdot y_a & z_b\cdot y_a\\
+x_b\cdot z_a & y_b\cdot z_a & z_b\cdot z_a
+\end{bmatrix}
+\end{split}
+\end{equation}
+Transformation between consecutive joints using DH convention:
+\begin{equation}
+\begin{split}
+^{i-1}T_{i}&=R_{i-1}(\theta_i)\cdot Q_{i-1}(d_i)\cdot Q_i(a_i)\cdot R_i(\alpha_i)\\
+&=\begin{bmatrix}
+\cos(\theta_i) & -\sin(\theta_i)\cos(\alpha_i) & \sin(\theta_i)\sin(\alpha_i) & a_i\cos(\theta_i)\\
+\sin(\theta_i) & \cos(\theta_i)\sin(\alpha_i) & -\cos(\theta_i)\sin(\alpha_i) & a_i\sin(\theta_i)\\
+0 & \sin(\alpha_i) & \cos(\alpha_i) & d_i\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+\subsubsection{Frame Transformation Matrices of Joint Position A}
+Obtain the DH table of the robot at joint position A by converting specified joint angles from degrees to radians:
+\begin{table}[!ht]
+    \caption{DH Parameters of UR5e Robot at position A}
+    \begin{center}
+    \begin{tabular}{||c | c | c | c | c||} 
+     \hline
+     Link & $\theta$ (rad) & a (m) & d (m) & $\alpha$ (rad)\\
+     \hline\hline
+     1 & $-\frac{\pi}{2}$ & 0 & 0.1625 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     2 & -3.019 & -0.425 & 0 & 0 \\ [1ex] 
+     \hline
+     3 & 2.304 & -0.3922 & 0 & 0 \\ [1ex] 
+     \hline
+     4 & 3.840 & 0 & 0.1333 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     5 & 0 & 0 & 0.0997 & $-\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     6 & 0 & 0 & 0.0996 & 0 \\ [1ex] 
+     \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+Now, the required frame transformations can be obtained by substitution of the above values: 
+\begin{equation}
+\begin{split}
+^{0}T_{1}&=\begin{bmatrix}
+\cos(-\frac{\pi}{2}) & -\sin(-\frac{\pi}{2})\cos(\frac{\pi}{2}) & \sin(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & 0\cos(-\frac{\pi}{2})\\
+\sin(-\frac{\pi}{2}) & \cos(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & -\cos(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & 0\sin(-\frac{\pi}{2})\\
+0 & \sin(\frac{\pi}{2}) & \cos(\frac{\pi}{2}) & 0.1625\\
+0 & 0 & 0 & 1
+\end{bmatrix}\\
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+-1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0.1625\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{1}T_{2}&=\begin{bmatrix}
+-0.9925 & 0.1223 & 0 & 0.4218\\
+-0.1223 & -0.9925 & 0 & 0.0520\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{2}T_{3}&=\begin{bmatrix}
+-0.6693 & -0.7430 & 0 & 0.2625\\
+0.7430 & -0.6693 & 0 & -0.2914\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{3}T_{4}&=\begin{bmatrix}
+-0.7659 & 0 & -0.6430 & 0\\
+-0.6430 & 0 & 0.7659 & 0\\
+0 & 1 & 0 & 0.1333\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{4}T_{5}&=\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & -1 & 0 & 0.0997\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{5}T_{6}&=\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0.0996\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\subsection{Calculation of Forward Kinematic Solutions}
+
+\subsection{Verification of Solutions via MATLAB}
+
+\subsection{Verification of Solutions via URSim}
+
+\begin{enumerate}
+    \item Test
+    \item Test
+\end{enumerate}
+
+\section{Part B: Calculation of Jacobian}
+\subsection{Calculation of Jacobians}
+
+\subsection{Calculation of End Effector Velocities}
+
+\section{Part C: Trajectory Generation}
+\subsection{Square Trajectory via Tool-Space Movements}
+
+\subsection{Square Trajectory via Joint-Space Movements}
+
+\subsection{Comparison of Simulated Tool and Joint-Space Trajectories}
+
+\subsection{Comparison of Real-World Tool and Joint-Space Trajectories}
+
+\subsection{Discussion on the Trajectory Generation Method of the UR5e Robot}
+
+\subsection{Applications for Movement in Tool and Joint-Space}
+
+\section{Part D: Singularities}
+\subsection{Path Plan Between Set Poses in Joint-Space}
+
+\subsection{Path Plan Between Set Poses in Tool-Space}
+
+\subsection{Discussion of Suitability of Planned Paths}
+
+\subsection{Discussion of the Types and Effects of Robotic Joint Singularities}
+
+\end{document}
