@@ -105,7 +105,7 @@ Obtain the DH table of the robot at joint position A by converting specified joi
     \end{center}
 \end{table}
 
-Now, the required frame transformations can be obtained by substitution of the above values: 
+Now, the consecutive joint frame transformations can be obtained by substitution of the above values: 
 \begin{equation}
 \begin{split}
 ^{0}T_{1}&=\begin{bmatrix}
@@ -126,8 +126,8 @@ Now, the required frame transformations can be obtained by substitution of the a
 \begin{equation}
 \begin{split}
 ^{1}T_{2}&=\begin{bmatrix}
--0.9925 & 0.1223 & 0 & 0.4218\\
--0.1223 & -0.9925 & 0 & 0.0520\\
+-0.9925 & 0.1219 & 0 & 0.4218\\
+-0.1219 & -0.9925 & 0 & 0.0518\\
 0 & 0 & 1 & 0\\
 0 & 0 & 0 & 1
 \end{bmatrix}
@@ -137,8 +137,8 @@ Now, the required frame transformations can be obtained by substitution of the a
 \begin{equation}
 \begin{split}
 ^{2}T_{3}&=\begin{bmatrix}
--0.6693 & -0.7430 & 0 & 0.2625\\
-0.7430 & -0.6693 & 0 & -0.2914\\
+-0.6691 & -0.7431 & 0 & 0.2624\\
+0.7431 & -0.6691 & 0 & -0.2915\\
 0 & 0 & 1 & 0\\
 0 & 0 & 0 & 1
 \end{bmatrix}
@@ -148,8 +148,8 @@ Now, the required frame transformations can be obtained by substitution of the a
 \begin{equation}
 \begin{split}
 ^{3}T_{4}&=\begin{bmatrix}
--0.7659 & 0 & -0.6430 & 0\\
--0.6430 & 0 & 0.7659 & 0\\
+-0.7660 & 0 & -0.6428 & 0\\
+-0.6428 & 0 & 0.7660 & 0\\
 0 & 1 & 0 & 0.1333\\
 0 & 0 & 0 & 1
 \end{bmatrix}
@@ -178,9 +178,255 @@ Now, the required frame transformations can be obtained by substitution of the a
 \end{split}
 \end{equation}
 
+With the consecutive joint frame transformations, the transformations between each joint and the base frame are easily obtained:
+
+\begin{equation}
+\begin{split}
+^{0}T_{2}&=^{0}T_{1}\cdot^{1}T_{2}
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+0.9925 & -0.1219 & 0 & -0.4218\\
+-0.1219 & 0.9925 & 0 & 0.2143\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{3}&=^{0}T_{2}\cdot^{2}T_{3}
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+-0.7547 & -0.6561 & 0 & -0.1258\\
+-0.6561 & 0.7547 & 0 & 0.4716\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{4}&=^{0}T_{3}\cdot^{3}T_{4}
+&=\begin{bmatrix}
+0 & -1 & 0 & -0.1333\\
+0.9998 & 0 & -0.01745 & -0.1258\\
+0.01745 & 0 & 0.9998 & 0.4716\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{5}&=^{0}T_{4}\cdot^{4}T_{5}
+&=\begin{bmatrix}
+0 & 0 & -1 & -0.1333\\
+0.9998 & 0.01745 & 0 & -0.1276\\
+0.01745 & -0.9998 & 0 & 0.5713\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\subsubsection{Frame Transformation Matrices of Joint Position B}
+Obtain the DH table of the robot at joint position B by converting specified joint angles from degrees to radians:
+\begin{table}[!ht]
+    \caption{DH Parameters of UR5e Robot at position B}
+    \begin{center}
+    \begin{tabular}{||c | c | c | c | c||} 
+     \hline
+     Link & $\theta$ (rad) & a (m) & d (m) & $\alpha$ (rad)\\
+     \hline\hline
+     1 & $-\frac{\pi}{2}$ & 0 & 0.1625 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     2 & $-\frac{\pi}{3}$ & -0.425 & 0 & 0 \\ [1ex] 
+     \hline
+     3 & $\frac{\pi}{2}$ & -0.3922 & 0 & 0 \\ [1ex] 
+     \hline
+     4 & 0 & 0 & 0.1333 & $\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     5 & $\frac{\pi}{2}$ & 0 & 0.0997 & $-\frac{\pi}{2}$ \\ [1ex] 
+     \hline
+     6 & 0 & 0 & 0.0996 & 0 \\ [1ex] 
+     \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+Now, the consecutive joint frame transformations can be obtained by substitution of the above values: 
+\begin{equation}
+\begin{split}
+^{0}T_{1}&=\begin{bmatrix}
+\cos(-\frac{\pi}{2}) & -\sin(-\frac{\pi}{2})\cos(\frac{\pi}{2}) & \sin(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & 0\cos(-\frac{\pi}{2})\\
+\sin(-\frac{\pi}{2}) & \cos(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & -\cos(-\frac{\pi}{2})\sin(\frac{\pi}{2}) & 0\sin(-\frac{\pi}{2})\\
+0 & \sin(\frac{\pi}{2}) & \cos(\frac{\pi}{2}) & 0.1625\\
+0 & 0 & 0 & 1
+\end{bmatrix}\\
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+-1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0.1625\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{1}T_{2}&=\begin{bmatrix}
+0.5 & 0.8660 & 0 & -0.2125\\
+-0.8660 & 0.5 & 0 & 0.3681\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{2}T_{3}&=\begin{bmatrix}
+0 & -1 & 0 & 0\\
+1 & 0 & 0 & -0.3922\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{3}T_{4}&=\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 0 & -1 & 0\\
+0 & 1 & 0 & 0.1333\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{4}T_{5}&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+1 & 0 & 0 & 0\\
+0 & -1 & 0 & 0.0997\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{5}T_{6}&=\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0.0996\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+With the consecutive joint frame transformations, the transformations between each joint and the base frame are easily obtained:
+
+\begin{equation}
+\begin{split}
+^{0}T_{2}&=^{0}T_{1}\cdot^{1}T_{2}
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+-0.5 & -0.8660 & 0 & 0.2125\\
+-0.8660 & 0.5 & 0 & 0.5306\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{3}&=^{0}T_{2}\cdot^{2}T_{3}
+&=\begin{bmatrix}
+0 & 0 & -1 & 0\\
+-0.8660 & 0.5 & 0 & 0.5522\\
+0.5 & 0.8660 & 0 & 0.3345\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{4}&=^{0}T_{3}\cdot^{3}T_{4}
+&=\begin{bmatrix}
+0 & -1 & 0 & -0.1333\\
+-0.8660 & 0 & -0.5 & 0.5522\\
+0.5 & 0 & -0.8660 & 0.3345\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+^{0}T_{5}&=^{0}T_{4}\cdot^{4}T_{5}
+&=\begin{bmatrix}
+-1 & 0 & 0 & -0.1333\\
+0 & 0.5 & 0.8660 & 0.5023\\
+0 & 0.8660 & -0.5 & 0.2481\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
 \subsection{Calculation of Forward Kinematic Solutions}
+\\subsubsection{Forward Kinematic Solution for Joint Position A}
+\begin{equation}
+\begin{split}
+^{0}T_{6}&=^{0}T_{5}\cdot^{5}T_{6}
+&=\begin{bmatrix}
+0 & 0 & -1 & -0.2329\\
+0.9998 & 0.01745 & 0 & -0.1276\\
+0.01745 & -0.9998 & 0 & 0.5713\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\\subsubsection{Forward Kinematic Solution for Joint Position B}
+\begin{equation}
+\begin{split}
+^{0}T_{2}&=^{0}T_{5}\cdot^{5}T_{6}
+&=\begin{bmatrix}
+-1 & 0 & 0 & -0.1333\\
+0 & 0.5 & 0.8660 & 0.5886\\
+0 & 0.8660 & -0.5 & 0.1983\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
 
 \subsection{Verification of Solutions via MATLAB}
+\\subsubsection{Forward Kinematic Solution for Joint Position A}
+\begin{equation}
+\begin{split}
+^{0}T_{6}&=\begin{bmatrix}
+0 & 0 & -1 & -0.2329\\
+0.9998 & 0.01745 & 0 & -0.1276\\
+0.01745 & -0.9998 & 0 & 0.5713\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
+
+\\subsubsection{Forward Kinematic Solution for Joint Position B}
+\begin{equation}
+\begin{split}
+^{0}T_{2}&=\begin{bmatrix}
+-1 & 0 & 0 & -0.1333\\
+0 & 0.5 & 0.8660 & 0.5886\\
+0 & 0.8660 & -0.5 & 0.1983\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{split}
+\end{equation}
 
 \subsection{Verification of Solutions via URSim}
 
@@ -215,5 +461,18 @@ Now, the required frame transformations can be obtained by substitution of the a
 \subsection{Discussion of Suitability of Planned Paths}
 
 \subsection{Discussion of the Types and Effects of Robotic Joint Singularities}
+A singularity is a state of a robot's joint configuration parameters which results in the loss of one or more degrees of freedom (DOFs) in its motion.
+In terms of the Jacobian, a singularity is said to be reached if the determinant of the Jacobian for a given joint configuration is zero. Effectively,
+this means that not all of the columns of the Jacobian matrix are linearly independent of one another, which explains why a singularity state results in the loss
+of a degree of freedom, since a change in one joint parameter will be equivalent to a change in another. The three types of singularities which are relevant to
+6-DOF robots such as the UR5e are: wrist singularities, shoulder singularities and elbow singularities.
+
+A wrist singularity is reached when the actuation axes of joints 4 and 6 (the first and last wrist joints respectively) are parallel.
+
+A shoulder singularity is reached when the robot's wrist center is aligned with the actuation axis of the first, or base, joint. In this singularity state, rotation of the robot's wrist
+in one direction will be equivalent to rotation of the base joint.
+
+An elbow singularity is reached when the actuation axes of joints 2 and 3 are aligned with the robot's wrist center. Effectively, the robot has extended itself to the limit
+of its workspace in this configuration, meaning that it is not possible for it to extend further outwards in a radial direction from its base frame.
 
 \end{document}

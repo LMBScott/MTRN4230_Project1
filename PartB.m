@@ -1,5 +1,5 @@
 
-function PartA(pos)
+function PartB(pos)
     arguments
         pos (1,1) char = 'a'
     end
@@ -21,6 +21,7 @@ function PartA(pos)
     links = Link.empty();
     jointTransforms = cell.empty();
     originTransforms = cell.empty();
+    jacobian = zeros(6, 6);
     
     for i = 1 : 6
         links(i) = Link('revolute', 'd', d(i), 'a', a(i), 'alpha', alpha(i), 'offset', 0);
@@ -33,19 +34,57 @@ function PartA(pos)
         end
 
         originTransforms{i} = prevOriginTransform * jointTransforms{i};
-
-        disp("Joint Transform " + (i-1) + "->" + i);
-        disp(jointTransforms{i});
-        disp("Origin Transform 0->" + i);
-        disp(originTransforms{i});
     end
+    
+    T06 = originTransforms{6};
+    T00 = zeros(4, 4);
+    T00(3, 3) = 1;
+    on = T06(1:3, 4);
+
+    for i = 1 : 6
+        T0i = T00;
+
+        if i > 1
+            T0i = originTransforms{i-1};
+        end
+
+        zi = T0i(1:3, 3);
+        oi = T0i(1:3, 4);
+
+        disp(zi);
+        disp(oi);
+
+        jVi = cross(zi, on - oi);
+        jwi = zi;
+        
+        jacobian(:, i) = [jVi; jwi];
+    end
+
+    disp("Calculated Jacobian:");
+    disp(jacobian);
     
     ur5 = SerialLink(links, 'name', 'UR5e');
     
-    disp("RVC Toolbox Forward Kinematic Solution:")
-    fKine = ur5.fkine(jointPos);
+    rvcJacobian = ur5.jacob0(jointPos);
+    disp("RVC Toolbox Jacobian:");
+    disp(rvcJacobian);
     
-    disp(fKine);
+    qDesired = [1; 0.1; 0.1; 0.1; 0.1; 0.1];
+    vInstantaneous = jacobian * qDesired;
+    disp("End Effector Velocities for Desired Joint Velocities:");
+    disp(vInstantaneous);
+
+    vDesired = [250e-3; 0; 0; 0; 0; 0];
+
+    invJ = pinv(jacobian);
+
+    disp("Inverse Jacobian:");
+    disp(invJ);
+
+    qInstantaneous = invJ * vDesired;
+
+    disp("Instantaneous Joint Velocities:");
+    disp(qInstantaneous);
 end
 
 function trans = joint_transform(theta, a, d, alpha)

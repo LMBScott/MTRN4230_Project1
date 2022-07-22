@@ -1,5 +1,5 @@
 
-function PartC(isSim, moveType)
+function PartC_Move(isSim, moveType)
     arguments
         isSim logical = 1
         moveType (1,1) char = 'l'
@@ -69,7 +69,7 @@ end
 function [ poses, jointPs, jointVs, jointAs, jointTs ] = moveL(ur5, poses, jointPs, jointVs, jointAs, jointTs, nextPose)
     ACC = 0.1;  % Acceleration, m/s^2
     VEL = 0.05; % Velocity, m/s
-    [ pose, pos, vel, acc, trq ] = ur5.movel(nextPose, "pose", ACC, VEL, 0, 0);
+    [ pose, pos, vel, acc, trq ] = ur5.movel(nextPose, ACC, VEL, 0, 0);
     poses = cat(1, poses, pose);
     jointPs = cat(1, jointPs, pos);
     jointVs = cat(1, jointVs, vel);
@@ -80,7 +80,7 @@ end
 function [ poses, jointPs, jointVs, jointAs, jointTs ] = moveJ(ur5, poses, jointPs, jointVs, jointAs, jointTs, nextPose)
     ACC = 0.1;  % Acceleration, m/s^2
     VEL = 0.05; % Velocity, m/s
-    [ pose, pos, vel, acc, trq ] = ur5.movej(nextPose, "pose", ACC, VEL, 0, 0);
+    [ pose, pos, vel, acc, trq ] = ur5.movej(nextPose, ACC, VEL, 0, 0);
     poses = cat(1, poses, pose);
     jointPs = cat(1, jointPs, pos);
     jointVs = cat(1, jointVs, vel);
